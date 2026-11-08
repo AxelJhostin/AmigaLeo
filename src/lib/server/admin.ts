@@ -12,7 +12,7 @@ export async function isAdmin(request: Request): Promise<boolean> {
   const match = /^Bearer (\S+)$/.exec(request.headers.get('authorization') || '');
   if (!match) return false;
   try {
-    const { payload } = await jwtVerify(match[1], jwks, { issuer: new URL(authUrl).origin, algorithms: ['EdDSA'] });
+    const { payload } = await jwtVerify(match[1], jwks, { issuer: new URL(authUrl).origin, audience: new URL(authUrl).origin, algorithms: ['EdDSA'] });
     return payload.sub === adminId;
   } catch { return false; }
 }

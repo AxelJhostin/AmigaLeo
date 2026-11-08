@@ -1,9 +1,10 @@
 import { createAuthClient } from '@neon/auth';
+import { BetterAuthVanillaAdapter } from '@neon/auth/vanilla/adapters';
 
 type Guest = { id:string; display_name:string; invite_code:string; status:'pending'|'attending'|'declined'; companion_allowed:boolean; companion_name:string|null; companion_attending:boolean };
 const app = document.querySelector<HTMLElement>('#admin-app')!;
 const authUrl = app.dataset.authUrl || '';
-const auth = authUrl ? createAuthClient(authUrl) : null;
+const auth = authUrl ? createAuthClient(authUrl, { adapter: BetterAuthVanillaAdapter({ fetchOptions: { credentials: 'include' } }) }) : null;
 const el = <T extends HTMLElement>(selector:string) => document.querySelector<T>(selector)!;
 const msg = el<HTMLElement>('#message');
 const login = el<HTMLElement>('#login-section');
@@ -16,9 +17,10 @@ let guests: Guest[] = [];
 function message(s:string) { msg.textContent = s; }
 async function api(method = 'GET', data?:object) {
   if (!auth) throw new Error('Configura Neon Auth en el servidor.');
-  const { data: tokenData, error } = await auth.token();
-  if (error || !tokenData?.token) throw new Error('Inicia sesión de nuevo.');
-  const res = await fetch('/api/admin/guests', { method, headers: { Authorization: `Bearer ${tokenData.token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, body: data ? JSON.stringify(data) : undefined });
+  const { data: sessionData, error } = await auth.getSession();
+  const token = sessionData?.session?.token;
+  if (error || !token) throw new Error('No se pudo recuperar la sesión. Revisa la configuración del navegador e inicia sesión otra vez.');
+  const res = await fetch('/api/admin/guests', { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, body: data ? JSON.stringify(data) : undefined });
   if (res.status === 401) throw new Error('Esta cuenta no está autorizada para administrar la lista.');
   const result = await res.json();
   if (!res.ok) throw new Error(result.error || 'Ocurrió un error.');
@@ -49,4 +51,4 @@ logout.addEventListener('click', async () => { if(auth) await auth.signOut(); gu
 form.addEventListener('submit', async e=>{e.preventDefault(); const f=new FormData(form); const id=String(f.get('id')||''); try { await api(id ? 'PATCH' : 'POST',{...(id ? {id}:{}),name:String(f.get('name')||''),companion:f.has('companion'),companionName:String(f.get('companionName')||'')}); form.reset(); (form.elements.namedItem('id') as HTMLInputElement).value=''; cancel.hidden=true; await refresh(); message('Invitado guardado.'); } catch(err){message(err instanceof Error ? err.message : 'Error al guardar.');} });
 cancel.addEventListener('click',()=>{form.reset(); (form.elements.namedItem('id') as HTMLInputElement).value=''; cancel.hidden=true;});
 el<HTMLInputElement>('#search').addEventListener('input',render); el<HTMLSelectElement>('#status').addEventListener('change',render);
-if (auth) auth.getSession().then(({data})=>{if(data?.session) return refresh();}).catch(()=>message('No se pudo acceder al panel.')); else message('Falta configurar Neon Auth.');
+if (auth) auth.getSession().then(({data})=>{if(data?.session) return refresh();}).catch((error)=>message(error instanceof Error ? error.message : 'No se pudo acceder al panel.')); else message('Falta configurar Neon Auth.');
