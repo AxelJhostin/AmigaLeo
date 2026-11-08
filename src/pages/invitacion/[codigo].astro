@@ -3,14 +3,16 @@ export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
 import Invitation from '../../components/invitation/Invitation.astro';
 import { pool } from '../../lib/server/admin';
+import { RSVP_DEADLINE } from '../../config/rsvp';
 const code = Astro.params.codigo || '';
 Astro.response.headers.set('Cache-Control', 'no-store');
-let name: string | undefined;
+Astro.response.headers.set('Referrer-Policy', 'no-referrer');
+let guest: { display_name: string; status: 'pending' | 'attending' | 'declined'; companion_allowed: boolean; companion_attending: boolean } | undefined;
 let unavailable = !pool;
 if (pool && /^[A-Za-z0-9_-]{43}$/.test(code)) {
-  try { const result = await pool.query('SELECT display_name FROM guests WHERE invite_code=$1', [code]); name = result.rows[0]?.display_name; }
+  try { const result = await pool.query('SELECT display_name, status, companion_allowed, companion_attending FROM guests WHERE invite_code=$1', [code]); guest = result.rows[0]; }
   catch { unavailable = true; }
 }
-if (!name) Astro.response.status = unavailable ? 503 : 404;
+if (!guest) Astro.response.status = unavailable ? 503 : 404;
 ---
-<Layout title="Invitación">{name ? <Invitation name={name} /> : <div class="scene"><p>{unavailable ? 'La invitación no está disponible por el momento.' : 'No encontramos esta invitación.'}</p></div>}</Layout>
+<Layout title="Invitación">{guest ? <Invitation name={guest.display_name} code={code} status={guest.status} companionAllowed={guest.companion_allowed} companionAttending={guest.companion_attending} closed={Date.now() >= Date.parse(RSVP_DEADLINE)} /> : <div class="scene"><p>{unavailable ? 'La invitación no está disponible por el momento.' : 'No encontramos esta invitación.'}</p></div>}</Layout>

@@ -167,3 +167,7 @@ Se creó el proyecto `amigaleo-invitacion` en la cuenta gratuita y una rama `des
 El panel en `/admin` incluye inicio de sesión con Neon Auth, listado, búsqueda, alta y edición de invitados, autorización individual de un acompañante y enlaces únicos para copiar o compartir por WhatsApp. Las rutas de datos verifican el token y comparan su identificador de usuario con `ADMIN_USER_ID` en el servidor. La invitación muestra el nombre a partir del código; el RSVP y la ubicación de un solo uso siguen pendientes.
 
 La conexión local apunta a la rama `desarrollo`. Para activar el acceso falta crear una cuenta en Neon Auth, asignar su ID exacto a `ADMIN_USER_ID` en `.env` y reiniciar Astro. Un correo de ejemplo no es una cuenta válida. El archivo `.env` es privado y no se debe compartir ni subir a Git. Antes de publicar, configurar por separado las variables en Vercel y comprobar los dominios de confianza de Neon Auth. La lista local no se ha importado.
+
+## Confirmación de asistencia
+
+La invitación personalizada permite confirmar o declinar y, cuando está permitido, indicar un acompañante. La respuesta puede cambiarse hasta el 16 de noviembre de 2026 inclusive; provisionalmente cierra a las 23:59:59 de Ecuador continental (17 de noviembre a las 05:00 UTC). El servidor comprueba el plazo y el permiso de acompañante al guardar. El panel refleja el estado al cargar o al pulsar «Actualizar respuestas». Esta función se probó en la rama de desarrollo; requiere desplegar la versión actual para usarla en producción.

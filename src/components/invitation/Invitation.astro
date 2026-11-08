@@ -1,6 +1,6 @@
 ---
-interface Props { name?: string }
-const { name } = Astro.props;
+interface Props { name?: string; code?: string; status?: 'pending' | 'attending' | 'declined'; companionAllowed?: boolean; companionAttending?: boolean; closed?: boolean }
+const { name, code, status = 'pending', companionAllowed = false, companionAttending = false, closed = false } = Astro.props;
 ---
 <div class="scene">
   <article class="card" aria-label="Invitación de cumpleaños">
@@ -17,8 +17,19 @@ const { name } = Astro.props;
       </div>
       <div class="dress"><span class="dress-star" aria-hidden="true">✧</span><p class="label">DRESS CODE</p><p class="dress-title">FULL BLACK</p><p class="bikini">BIKINI OBLIGATORIO</p></div>
       <div class="bottle-rule">🍾 <strong>BOTELLA EN MANO OBLIGATORIA</strong><span>Sin eso no entras</span></div>
-      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Confirma tu asistencia</p><p>Confirma tu asistencia hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p><div class="rsvp-options"><button type="button" disabled>CONF</button><button type="button" disabled>NO CONF</button></div><p class="rsvp-pending">Confirmaciones disponibles pronto</p></section>
+      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Confirma tu asistencia</p><p>Confirma hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p>
+        {code ? <div class="rsvp" data-code={code}>
+          <p class="rsvp-current" aria-live="polite">{status === 'attending' ? `Confirmaste tu asistencia${companionAttending ? ' con un acompañante' : ''}.` : status === 'declined' ? 'Indicaste que no podrás asistir.' : 'Aún no has respondido.'}</p>
+          {closed ? <p class="rsvp-feedback">El plazo para confirmar ya terminó.</p> : <form class="rsvp-form" method="post" onsubmit="return false">
+            {companionAllowed && <label class="rsvp-companion"><input type="checkbox" name="companion" checked={companionAttending} /> Llevaré un acompañante</label>}
+            <div class="rsvp-options"><button type="submit" name="answer" value="attending">CONF</button><button type="submit" name="answer" value="declined">NO CONF</button></div>
+            <p class="rsvp-feedback" role="status" aria-live="polite">Cargando el formulario de respuesta…</p><noscript>Activa JavaScript para enviar tu respuesta.</noscript>
+          </form>}
+        </div> : <p class="rsvp-pending">Abre tu enlace personalizado para responder.</p>}
+      </section>
       <footer>GOOD MUSIC <span>✦</span> GOOD FRIENDS <span>✦</span> GOOD VIBES</footer>
     </div>
   </article>
 </div>
+
+<script src="../../features/rsvp/form.ts"></script>
