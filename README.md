@@ -98,3 +98,30 @@ Optimizar las animaciones para móviles, ofrecer una alternativa para `prefers-r
 Requisitos: Node.js compatible con Astro y npm. Instalar las dependencias con `npm install` y ejecutar `npm run dev`. Para generar la versión de producción, usar `npm run build`. El adaptador de Vercel está configurado para permitir rutas dinámicas.
 
 La página principal y las rutas `/admin` y `/invitacion/<codigo>` son puntos de partida. La invitación devuelve temporalmente el estado 503; todavía no hay conexión a Supabase, inicio de sesión, gestión de invitados ni RSVP. No ingresar datos reales hasta implementar la protección y persistencia.
+
+## Organización del proyecto
+
+Las rutas de `src/pages` reciben las solicitudes y componen las páginas. Mantenerlas pequeñas facilitará cambiar el diseño o la lógica de cada función por separado.
+
+```text
+src/
+  pages/                 Rutas públicas, invitación y administración
+  layouts/               Estructura HTML compartida
+  components/
+    shared/              Componentes visuales reutilizables
+    invitation/          Componentes propios de la invitación
+    admin/               Componentes propios del panel
+  config/                Contenido y configuración compartida del sitio
+  features/
+    invitations/         Gestión y consulta de invitaciones
+    rsvp/                Reglas y operaciones de confirmación
+    admin/               Funciones de administración
+  lib/server/            Integraciones y utilidades exclusivas del servidor
+  styles/                Estilos globales y variables visuales
+  types/                 Tipos compartidos
+public/
+  images/                Imágenes públicas
+  audio/                 Música pública cuando esté definida
+```
+
+Las carpetas reservadas están vacías hasta que se necesiten. Los detalles de conexión y las claves privadas irán en variables de entorno del servidor, nunca en `public/` ni en componentes enviados al navegador. La autenticación, las reglas de acceso y el almacenamiento se implementarán al configurar Supabase; la página actual de administración es solo un marcador sin datos.
