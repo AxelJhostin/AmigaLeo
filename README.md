@@ -28,7 +28,7 @@ Crear una invitación web animada y personalizada que se pueda compartir por Wha
 
 - **Concepto:** fiesta full black y pool party, con detalles de neón y brillo. La paleta de acentos, tipografías y composición quedan pendientes.
 - **Ambiente propuesto:** fondo oscuro, luces de neón y movimiento inspirado en reflejos de agua; cuidar la legibilidad y la experiencia móvil.
-- **Mensaje esencial:** indicar claramente que llevar traje de baño es obligatorio.
+- **Mensaje esencial:** indicar claramente que llevar bikini es obligatorio.
 - **Personalización:** saludar al invitado por el nombre registrado y mantener una sensación de invitación individual.
 - **Animación y música:** introducir movimiento y luz de forma progresiva; la canción y los detalles visuales se definirán más adelante.
 
@@ -145,3 +145,7 @@ public/
 ```
 
 Las carpetas reservadas están vacías hasta que se necesiten. Los detalles de conexión y las claves privadas irán en variables de entorno del servidor, nunca en `public/` ni en componentes enviados al navegador. La autenticación, las reglas de acceso y el almacenamiento se implementarán al configurar Supabase; la página actual de administración es solo un marcador sin datos.
+
+## Referencia visual actual
+
+La referencia preferida es una invitación de cumpleaños negra y plateada, con brillo, bolas de discoteca y acentos neón. El cumpleaños es el centro de la composición; la piscina es un detalle del evento. El bikini es obligatorio. La edad, nombre de la anfitriona, fecha y hora de la fiesta siguen pendientes; el 22 de la referencia no se asume como dato real.
