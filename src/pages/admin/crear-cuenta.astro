@@ -3,7 +3,7 @@ export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/admin.css';
 if (!import.meta.env.DEV) return new Response('No encontrado', { status: 404 });
-const authUrl = import.meta.env.NEON_AUTH_BASE_URL || '';
+const authUrl = import.meta.env.SETUP_AUTH_BASE_URL || import.meta.env.NEON_AUTH_BASE_URL || '';
 Astro.response.headers.set('Cache-Control', 'no-store');
 ---
 <Layout title="Crear cuenta de prueba">
