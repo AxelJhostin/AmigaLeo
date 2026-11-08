@@ -5,14 +5,15 @@ const { name } = Astro.props;
 <div class="scene">
   <article class="card" aria-label="Invitación de cumpleaños">
     <div class="disco disco-left" aria-hidden="true"></div><div class="disco disco-right" aria-hidden="true"></div>
+    <div class="bottles" aria-hidden="true"><div class="bottle bottle-one"><span></span></div><div class="bottle bottle-two"><span></span></div><div class="bottle bottle-three"><span></span></div><div class="bottle bottle-four"><span></span></div></div>
     <span class="twinkle t1" aria-hidden="true">✦</span><span class="twinkle t2" aria-hidden="true">✧</span><span class="twinkle t3" aria-hidden="true">✦</span><span class="twinkle t4" aria-hidden="true">✧</span>
     <div class="card-content">
       <p class="topline">UNA NOCHE PARA CELEBRAR<br />Y RECORDAR PARA SIEMPRE</p>
       <p class="greeting">{name ? `${name}, estás invitad@` : 'Esta invitación es para ti'}</p>
-      <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1>LET'S<br /><span>PARTY</span></h1><div class="underline" aria-hidden="true"></div></div>
+      <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1 class="age">21</h1><p class="age-note">EDAD POR CONFIRMAR</p><div class="underline" aria-hidden="true"></div></div>
       <p class="subtitle">UNA NOCHE BRILLANTE NOS ESPERA</p>
       <div class="details">
-        <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">PRÓXIMAMENTE</p></div>
+        <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">20 NOVIEMBRE</p><p class="note">2026 · hora por confirmar<br />Fecha por confirmar</p></div>
         <div class="detail"><span class="icon" aria-hidden="true">⌖</span><p class="label">UBICACIÓN</p><p class="value">ES UN SECRETO</p><p class="note">Se revelará con un código de un solo uso</p></div>
       </div>
       <div class="dress"><span class="dress-star" aria-hidden="true">✧</span><p class="label">DRESS CODE</p><p class="dress-title">FULL BLACK</p><p class="bikini">BIKINI OBLIGATORIO</p></div>

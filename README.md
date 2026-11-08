@@ -149,3 +149,5 @@ Las carpetas reservadas están vacías hasta que se necesiten. Los detalles de c
 ## Referencia visual actual
 
 La referencia preferida es una invitación de cumpleaños negra y plateada, con brillo, bolas de discoteca y acentos neón. El cumpleaños es el centro de la composición; la piscina es un detalle del evento. El bikini es obligatorio. La edad, nombre de la anfitriona, fecha y hora de la fiesta siguen pendientes; el 22 de la referencia no se asume como dato real.
+
+La fiesta sería el **20 de noviembre de 2026** y la cumpleañera cumpliría **21 años**; ambos datos son provisionales hasta confirmarlos. La hora sigue pendiente. La fecha límite de RSVP continúa siendo el 16 de noviembre.
