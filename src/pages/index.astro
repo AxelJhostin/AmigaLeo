@@ -1,8 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { site } from '../config/site';
+import Invitation from '../components/invitation/Invitation.astro';
 ---
-<Layout title={site.title}>
-  <h1>Una invitación especial</h1>
-  <p>Estamos preparando todos los detalles. Pronto recibirás tu enlace personalizado.</p>
+<Layout title="Invitación | Pool party" description="Una noche full black junto al agua.">
+  <Invitation />
 </Layout>

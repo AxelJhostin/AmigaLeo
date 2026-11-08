@@ -19,9 +19,26 @@ Crear una invitación web animada y personalizada que se pueda compartir por Wha
 1. La administradora inicia sesión y carga manualmente los nombres.
 2. El sistema genera para cada invitado un enlace único, por ejemplo `https://dominio/invitacion/<codigo>`.
 3. Desde administración se copia el enlace o se abre WhatsApp con un mensaje prellenado para compartirlo. El envío lo hace la persona desde WhatsApp; no se necesita integrar la API de WhatsApp para el caso básico.
-4. El invitado abre la invitación, ve su nombre y los detalles del evento y elige **Asistiré** o **No podré asistir**. Se está considerando permitir acompañantes con un máximo por invitación; queda por confirmar el límite y si se pedirá el nombre de cada acompañante.
-5. La respuesta queda guardada y la página de administración muestra el estado actualizado, por ejemplo: “Axel confirmó asistencia”.
-6. La respuesta solo se puede registrar o cambiar hasta una semana después de la fecha de envío de la invitación (regla provisional; confirmar si el plazo se calcula desde la fecha de envío o desde otro hito). Al vencer el plazo, la página informa que ya no se aceptan confirmaciones.
+4. El invitado abre la invitación, ve su nombre y los detalles del evento y elige **Asistiré** o **No podré asistir**. Si la administradora habilitó acompañante para esa persona, podrá indicar si llevará uno. Se permite como máximo un acompañante por invitado; queda pendiente decidir si se pide su nombre.
+5. La respuesta queda guardada y la página de administración muestra el estado actualizado y si llevará acompañante, por ejemplo: “Axel confirmó asistencia + 1 acompañante”.
+6. La fecha límite para confirmar es el 16 de noviembre de 2026; faltan la hora exacta y la zona horaria. Al vencer el plazo, la página informa que ya no se aceptan confirmaciones. La fecha se validará también en el servidor.
+7. La ubicación se podrá revelar una sola vez mediante un código de un solo uso. El flujo exacto y cuándo se entrega el código están pendientes de definir.
+
+## Dirección visual y contenido
+
+- **Concepto:** fiesta full black y pool party, con detalles de neón y brillo. La paleta de acentos, tipografías y composición quedan pendientes.
+- **Ambiente propuesto:** fondo oscuro, luces de neón y movimiento inspirado en reflejos de agua; cuidar la legibilidad y la experiencia móvil.
+- **Mensaje esencial:** indicar claramente que llevar traje de baño es obligatorio.
+- **Personalización:** saludar al invitado por el nombre registrado y mantener una sensación de invitación individual.
+- **Animación y música:** introducir movimiento y luz de forma progresiva; la canción y los detalles visuales se definirán más adelante.
+
+## Ubicación de un solo uso
+
+La intención es que cada invitado pueda ver la ubicación una sola vez usando un código de un solo uso. Como propuesta, el servidor validará y consumirá el código mediante una operación atómica antes de devolver la ubicación, para que dos solicitudes simultáneas no puedan usarlo. La dirección no debe aparecer en el HTML inicial, recursos públicos, metadatos ni respuestas anteriores a la validación. Evitar su almacenamiento en caché y registros.
+
+La página deberá avisar antes de revelar la ubicación que solo podrá consultarse una vez. Si se interrumpe la conexión después de consumir el código, podría no mostrarse; conviene permitir que la administradora genere otro tras verificar la solicitud. Falta decidir cómo se entrega el código, si el acceso requiere confirmar asistencia y cómo se recupera el acceso.
+
+Esta medida limita las consultas, pero no impide que quien vea la dirección la anote, haga una captura o la comparta. Un enlace de invitación o código compartido también podría ser usado por otra persona antes que el destinatario.
 
 ## Datos iniciales
 
@@ -33,10 +50,11 @@ Modelo orientativo; se ajustará al formato real de invitados y a las reglas del
 - `display_name`: nombre que se muestra en la invitación.
 - `invite_code`: código aleatorio, único y no secuencial para el enlace.
 - `status`: `pending`, `attending` o `declined`.
-- `party_size_allowed`: máximo de asistentes permitidos para esa invitación (por defecto 1; valor ajustable si se aprueban acompañantes).
-- `party_size_confirmed`: cantidad confirmada, si se habilitan acompañantes.
+- `party_size_allowed`: máximo de asistentes para esa invitación: 1 por defecto o 2 si la administradora habilita un acompañante.
+- `party_size_confirmed`: cantidad confirmada: 1 o 2 cuando asiste; sin asistentes cuando declina. El servidor debe validar que no exceda el límite asignado.
 - `rsvp_deadline`: fecha y hora límite para responder.
 - `created_at`, `updated_at`.
+- El código de ubicación y su estado de uso se modelarán aparte de la invitación; su generación y recuperación están pendientes de definir.
 
 ### `rsvps` (opcional si se necesita historial)
 
@@ -61,13 +79,13 @@ Optimizar las animaciones para móviles, ofrecer una alternativa para `prefers-r
 ## Páginas y funciones previstas
 
 - **Invitación pública:** contenido personalizado por código, detalles del evento, animación, música opcional y formulario RSVP.
-- **Administración:** acceso autenticado, listado con búsqueda/filtros por estado, alta/edición/baja de invitados y resumen de confirmaciones.
+- **Administración:** acceso autenticado, listado con búsqueda/filtros por estado, alta/edición/baja de invitados, opción individual para permitir un acompañante y resumen de confirmaciones con acompañantes.
 - **Compartir:** copiar enlace y generar enlace `wa.me` con texto prellenado. El envío lo realiza la anfitriona desde WhatsApp.
 - **Exportación:** incluir descarga CSV como respaldo o para la lista final. La carga de nombres será manual; no se necesita importar CSV.
 
 ## Fases sugeridas
 
-1. **Definición:** confirmar evento, regla exacta de acompañantes, campos de RSVP, fecha límite, acceso administrativo y si habrá dominio propio.
+1. **Definición:** confirmar datos del evento, si se pide el nombre del acompañante, hora y zona horaria del cierre, acceso administrativo y si habrá dominio propio.
 2. **Base funcional:** iniciar Astro, preparar base de datos, autenticación, invitaciones por código y confirmación persistente.
 3. **Administración y compartir:** lista, estados, carga de invitados y enlaces para WhatsApp.
 4. **Diseño y movimiento:** aplicar dirección visual, animaciones, contenido y música.
@@ -76,9 +94,11 @@ Optimizar las animaciones para móviles, ofrecer una alternativa para `prefers-r
 ## Decisiones pendientes
 
 - **Resuelto:** cada invitación corresponde a una persona.
-- **Pendiente:** si se permiten acompañantes, su límite por invitación y si se registran sus nombres.
-- **Resuelto provisionalmente:** habrá una semana para responder. Falta definir desde qué fecha se cuenta el plazo y la zona horaria para cerrar respuestas.
+- **Acompañantes:** la administradora decide por invitado si permite uno; máximo un acompañante adicional. El invitado debe indicar si lo llevará y el panel debe reflejarlo. Pendiente decidir si se registra su nombre.
+- **Fecha límite:** 16 de noviembre de 2026. Pendientes la hora exacta y la zona horaria; esta fecha sustituye la regla provisional de una semana.
 - **Pendiente:** si habrá una sola cuenta administradora o varias.
+- **Ubicación:** definir cuándo y cómo se entrega el código de un solo uso, si exige confirmar asistencia y cómo se recupera el acceso.
+- **Diseño:** definir colores de neón, referencias visuales, textos y datos del evento.
 - **Resuelto:** alta manual de invitados; no se necesita importar la lista. Se agregará exportación CSV opcional para respaldo.
 - **Resuelto:** desplegar en Vercel y usar Supabase en planes gratuitos; presupuesto inicial cero. Dominio propio pendiente.
 - **Pendiente:** seleccionar la música. Se cuenta con permiso para publicarla. La reproducción requerirá una acción de la persona invitada por las restricciones del navegador.

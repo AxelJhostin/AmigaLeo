@@ -1,0 +1,26 @@
+---
+interface Props { name?: string }
+const { name } = Astro.props;
+---
+<div class="scene">
+  <article class="card" aria-label="Invitación a la pool party">
+    <div class="card-glow" aria-hidden="true"></div>
+    <header class="card-header"><span>UNA INVITACIÓN ESPECIAL</span><span class="sparkle" aria-hidden="true">✳</span></header>
+    <div class="card-content">
+      <p class="greeting">{name ? `${name}, esta noche es para ti` : 'Esta noche es para ti'}</p>
+      <div class="title-wrap"><p class="title-overline">YOU'RE INVITED TO A</p><h1>POOL<br/><span>PARTY</span></h1><span class="title-star" aria-hidden="true">✦</span></div>
+      <p class="intro">Una noche bajo las luces,<br />una fiesta junto al agua.</p>
+      <div class="water-art" aria-hidden="true"><div class="water-ring ring-a"></div><div class="water-ring ring-b"></div><div class="water-ring ring-c"></div><span>✦</span><span>✧</span></div>
+      <div class="divider"><span></span><i>✦</i><span></span></div>
+      <div class="details">
+        <div class="detail"><span class="icon" aria-hidden="true">◷</span><div><p class="label">FECHA Y HORA</p><p class="value">Próximamente</p></div></div>
+        <div class="detail"><span class="icon" aria-hidden="true">✧</span><div><p class="label">DRESS CODE</p><p class="value">Full black</p><p class="note">Traje de baño obligatorio</p></div></div>
+        <div class="detail"><span class="icon" aria-hidden="true">⌖</span><div><p class="label">UBICACIÓN</p><p class="value">Un pequeño secreto</p><p class="note">Se revelará con un código de un solo uso.</p></div></div>
+      </div>
+      <div class="divider"><span></span><i>✦</i><span></span></div>
+      <section class="confirmation" aria-labelledby="rsvp-title"><p class="label">RESERVA TU LUGAR</p><h2 id="rsvp-title">¿Te sumas?</h2><p>Confirma tu asistencia hasta el<br /><strong>16 de noviembre de 2026</strong></p><div class="pending">Confirmación disponible pronto</div></section>
+    </div>
+    <footer><span>FULL BLACK</span><span class="footer-star">✦</span><span>POOL PARTY</span></footer>
+  </article>
+  <p class="preview-note">Una noche para recordar ✦</p>
+</div>
