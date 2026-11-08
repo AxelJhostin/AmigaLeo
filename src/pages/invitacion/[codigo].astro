@@ -1,9 +1,16 @@
 ---
 export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
-Astro.response.status = 503;
+import Invitation from '../../components/invitation/Invitation.astro';
+import { pool } from '../../lib/server/admin';
+const code = Astro.params.codigo || '';
+Astro.response.headers.set('Cache-Control', 'no-store');
+let name: string | undefined;
+let unavailable = !pool;
+if (pool && /^[A-Za-z0-9_-]{43}$/.test(code)) {
+  try { const result = await pool.query('SELECT display_name FROM guests WHERE invite_code=$1', [code]); name = result.rows[0]?.display_name; }
+  catch { unavailable = true; }
+}
+if (!name) Astro.response.status = unavailable ? 503 : 404;
 ---
-<Layout title="Invitación">
-  <h1>Invitación en preparación</h1>
-  <p>La invitación personalizada todavía no está disponible.</p>
-</Layout>
+<Layout title="Invitación">{name ? <Invitation name={name} /> : <div class="scene"><p>{unavailable ? 'La invitación no está disponible por el momento.' : 'No encontramos esta invitación.'}</p></div>}</Layout>

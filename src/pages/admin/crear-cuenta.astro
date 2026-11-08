@@ -1,0 +1,24 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/admin.css';
+if (!import.meta.env.DEV) return new Response('No encontrado', { status: 404 });
+const authUrl = import.meta.env.NEON_AUTH_BASE_URL || '';
+Astro.response.headers.set('Cache-Control', 'no-store');
+---
+<Layout title="Crear cuenta de prueba">
+  <div class="admin" id="setup" data-auth-url={authUrl}>
+    <p class="eyebrow">CREAR ACCESO ÚNICO</p><h1>Configurar acceso <span>✦</span></h1>
+    <div class="notice"><strong>Solo desarrollo</strong><p>Elige una vez el correo y la contraseña para administrar la fiesta. Después se usará solo el inicio de sesión. Al terminar, avísame el correo para activar este acceso. No compartas tu contraseña.</p></div>
+    <section class="panel"><form method="post" onsubmit="return false" id="signup" class="form"><label>Nombre <input name="name" required maxlength="100" autocomplete="name" /></label><label>Correo <input name="email" type="email" required autocomplete="email" /></label><label>Contraseña <input name="password" type="password" minlength="8" required autocomplete="new-password" /></label><button type="submit">Crear acceso</button></form><p class="helper" id="result" role="status" aria-live="polite"></p></section>
+  </div>
+  <script is:inline>
+    document.getElementById('signup').addEventListener('submit', function (event) {
+      if (this.dataset.ready !== 'true') {
+        event.preventDefault();
+        document.getElementById('result').textContent = 'El formulario todavía no está listo. Recarga la página e inténtalo de nuevo.';
+      }
+    });
+  </script>
+  <script src="../../features/admin/setup.ts"></script>
+</Layout>

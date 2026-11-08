@@ -5,3 +5,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Lista local de invitados
+data/private/

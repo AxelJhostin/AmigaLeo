@@ -8,7 +8,6 @@ const { name } = Astro.props;
     <div class="bottles" aria-hidden="true"><div class="bottle bottle-one"><span></span></div><div class="bottle bottle-two"><span></span></div><div class="bottle bottle-three"><span></span></div><div class="bottle bottle-four"><span></span></div></div>
     <span class="twinkle t1" aria-hidden="true">✦</span><span class="twinkle t2" aria-hidden="true">✧</span><span class="twinkle t3" aria-hidden="true">✦</span><span class="twinkle t4" aria-hidden="true">✧</span>
     <div class="card-content">
-      <p class="topline">UNA NOCHE PARA CELEBRAR<br />Y RECORDAR PARA SIEMPRE</p>
       <p class="greeting">{name ? `${name}, estás invitad@` : 'Esta invitación es para ti'}</p>
       <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1 class="age">21</h1><p class="age-note">EDAD POR CONFIRMAR</p><div class="underline" aria-hidden="true"></div></div>
       <p class="subtitle">UNA NOCHE BRILLANTE NOS ESPERA</p>
@@ -17,7 +16,8 @@ const { name } = Astro.props;
         <div class="detail"><span class="icon" aria-hidden="true">⌖</span><p class="label">UBICACIÓN</p><p class="value">ES UN SECRETO</p><p class="note">Se revelará con un código de un solo uso</p></div>
       </div>
       <div class="dress"><span class="dress-star" aria-hidden="true">✧</span><p class="label">DRESS CODE</p><p class="dress-title">FULL BLACK</p><p class="bikini">BIKINI OBLIGATORIO</p></div>
-      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">¿Vienes a celebrar?</p><p>Confirma tu asistencia hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p><div class="pending">CONFIRMACIÓN DISPONIBLE PRONTO</div></section>
+      <div class="bottle-rule">🍾 <strong>BOTELLA EN MANO OBLIGATORIA</strong><span>Sin eso no entras</span></div>
+      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Confirma tu asistencia</p><p>Confirma tu asistencia hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p><div class="rsvp-options"><button type="button" disabled>CONF</button><button type="button" disabled>NO CONF</button></div><p class="rsvp-pending">Confirmaciones disponibles pronto</p></section>
       <footer>GOOD MUSIC <span>✦</span> GOOD FRIENDS <span>✦</span> GOOD VIBES</footer>
     </div>
   </article>

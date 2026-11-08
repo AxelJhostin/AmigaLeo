@@ -4,13 +4,13 @@ Documento de planificación técnica. Registra los acuerdos actuales y deja señ
 
 ## Objetivo
 
-Crear una invitación web animada y personalizada que se pueda compartir por WhatsApp. Cada invitado abre su enlace, ve su invitación y confirma o declina su asistencia. La anfitriona administra manualmente la lista y consulta las respuestas desde una página privada. El proyecto debe funcionar con los planes gratuitos de Vercel y Supabase, sin presupuesto inicial.
+Crear una invitación web animada y personalizada que se pueda compartir por WhatsApp. Cada invitado abre su enlace, ve su invitación y confirma o declina su asistencia. La anfitriona administra manualmente la lista y consulta las respuestas desde una página privada. El proyecto debe funcionar con los planes gratuitos de Vercel y Neon, sin presupuesto inicial.
 
 ## Propuesta de arquitectura
 
 - **Frontend:** Astro con TypeScript. La página pública puede prerenderizarse y cargar interactividad solo donde hace falta, para que la invitación sea rápida incluso en móviles.
 - **Interactividad:** componentes pequeños de JavaScript para animaciones, confirmación, música y estados del formulario. Elegiremos una librería de animación solo si el diseño lo necesita; primero conviene preferir CSS y Web Animations API.
-- **Datos y API:** Supabase (Postgres y funciones/API) para guardar invitados y RSVP. Usar el nivel gratuito y vigilar sus límites de uso; evitar funciones o servicios de pago.
+- **Datos y API:** Neon (Postgres), consultado desde rutas de servidor de Astro, para guardar invitados y RSVP. Usar el nivel gratuito y vigilar sus límites de uso; evitar funciones o servicios de pago.
 - **Administración:** ruta privada dentro del sitio, protegida con autenticación. Solo la anfitriona o personas autorizadas pueden crear, editar o eliminar invitados y consultar el listado completo.
 - **Publicación:** Vercel para el sitio Astro y Supabase para la base de datos, ambos en sus planes gratuitos. Confirmar dominio: se puede comenzar con el subdominio gratuito de Vercel y conectar un dominio propio si ya se dispone de uno.
 
@@ -100,7 +100,7 @@ Optimizar las animaciones para móviles, ofrecer una alternativa para `prefers-r
 - **Ubicación:** definir cuándo y cómo se entrega el código de un solo uso, si exige confirmar asistencia y cómo se recupera el acceso.
 - **Diseño:** definir colores de neón, referencias visuales, textos y datos del evento.
 - **Resuelto:** alta manual de invitados; no se necesita importar la lista. Se agregará exportación CSV opcional para respaldo.
-- **Resuelto:** desplegar en Vercel y usar Supabase en planes gratuitos; presupuesto inicial cero. Dominio propio pendiente.
+- **Resuelto:** desplegar en Vercel y usar Neon en planes gratuitos; presupuesto inicial cero. Dominio propio pendiente.
 - **Pendiente:** seleccionar la música. Se cuenta con permiso para publicarla. La reproducción requerirá una acción de la persona invitada por las restricciones del navegador.
 - **Resuelto:** conservar los datos después del evento por si acaso; acordar más adelante quién tendrá acceso y por cuánto tiempo.
 
@@ -117,7 +117,7 @@ Optimizar las animaciones para móviles, ofrecer una alternativa para `prefers-r
 
 Requisitos: Node.js compatible con Astro y npm. Instalar las dependencias con `npm install` y ejecutar `npm run dev`. Para generar la versión de producción, usar `npm run build`. El adaptador de Vercel está configurado para permitir rutas dinámicas.
 
-La página principal y las rutas `/admin` y `/invitacion/<codigo>` son puntos de partida. La invitación devuelve temporalmente el estado 503; todavía no hay conexión a Supabase, inicio de sesión, gestión de invitados ni RSVP. No ingresar datos reales hasta implementar la protección y persistencia.
+La página principal y las rutas `/admin` y `/invitacion/<codigo>` son puntos de partida. La invitación devuelve temporalmente el estado 503; todavía no hay conexión a Neon, inicio de sesión, gestión de invitados ni RSVP. No ingresar datos reales hasta implementar la protección y persistencia.
 
 ## Organización del proyecto
 
@@ -144,10 +144,26 @@ public/
   audio/                 Música pública cuando esté definida
 ```
 
-Las carpetas reservadas están vacías hasta que se necesiten. Los detalles de conexión y las claves privadas irán en variables de entorno del servidor, nunca en `public/` ni en componentes enviados al navegador. La autenticación, las reglas de acceso y el almacenamiento se implementarán al configurar Supabase; la página actual de administración es solo un marcador sin datos.
+Las carpetas reservadas están vacías hasta que se necesiten. Los detalles de conexión y las claves privadas irán en variables de entorno del servidor, nunca en `public/` ni en componentes enviados al navegador. La autenticación, las reglas de acceso y el almacenamiento se implementarán al configurar Neon; la página actual de administración es solo un marcador sin datos.
 
 ## Referencia visual actual
 
 La referencia preferida es una invitación de cumpleaños negra y plateada, con brillo, bolas de discoteca y acentos neón. El cumpleaños es el centro de la composición; la piscina es un detalle del evento. El bikini es obligatorio. La edad, nombre de la anfitriona, fecha y hora de la fiesta siguen pendientes; el 22 de la referencia no se asume como dato real.
 
 La fiesta sería el **20 de noviembre de 2026** y la cumpleañera cumpliría **21 años**; ambos datos son provisionales hasta confirmarlos. La hora sigue pendiente. La fecha límite de RSVP continúa siendo el 16 de noviembre.
+
+Opciones de música sugeridas: «Las Muñequitas» o «Destrabe Vol. 2»; falta confirmar la canción exacta y disponer del archivo autorizado para integrarla. Se solicita botella en mano obligatoria; la tarjeta mostrará «Sin eso no entras». Las opciones de respuesta serán «Conf» y «No conf».
+
+## Conexión a Neon pendiente
+
+Se eligió Neon para la base de datos y se evaluará Neon Auth para proteger el panel. La conexión aún no está configurada: falta acceder a una cuenta y seleccionar o crear un proyecto. La lista local no se ha subido y el panel permanece desactivado. La URL de conexión será una variable de entorno privada del servidor; no se incluirá en código cliente ni en Git.
+
+### Estado de Neon
+
+Se creó el proyecto `amigaleo-invitacion` en la cuenta gratuita y una rama `desarrollo` separada de `main`. Neon Auth y la tabla inicial de invitados están habilitados en desarrollo; la lista no se ha cargado todavía. El esquema está en `db/migrations/001_invitados.sql`. El panel continúa desactivado hasta implementar y verificar inicio de sesión y autorización del administrador, conexión a la base, gestión de invitados y enlaces. `admin@example.com` en `.env.example` es solo un marcador y debe reemplazarse por un correo real antes de habilitar acceso. No se ha configurado Vercel ni se ha desplegado el proyecto.
+
+### Panel y conexión local
+
+El panel en `/admin` incluye inicio de sesión con Neon Auth, listado, búsqueda, alta y edición de invitados, autorización individual de un acompañante y enlaces únicos para copiar o compartir por WhatsApp. Las rutas de datos verifican el token y comparan su identificador de usuario con `ADMIN_USER_ID` en el servidor. La invitación muestra el nombre a partir del código; el RSVP y la ubicación de un solo uso siguen pendientes.
+
+La conexión local apunta a la rama `desarrollo`. Para activar el acceso falta crear una cuenta en Neon Auth, asignar su ID exacto a `ADMIN_USER_ID` en `.env` y reiniciar Astro. Un correo de ejemplo no es una cuenta válida. El archivo `.env` es privado y no se debe compartir ni subir a Git. Antes de publicar, configurar por separado las variables en Vercel y comprobar los dominios de confianza de Neon Auth. La lista local no se ha importado.

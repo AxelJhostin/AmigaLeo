@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^8.0.0",
-    "astro": "^5.0.0"
+    "@neon/auth": "0.8.2",
+    "astro": "^5.0.0",
+    "jose": "^6.2.15",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
