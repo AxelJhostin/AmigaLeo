@@ -1,7 +1,7 @@
 import { createAuthClient } from '@neon/auth';
 import { BetterAuthVanillaAdapter } from '@neon/auth/vanilla/adapters';
 
-type Guest = { id:string; display_name:string; invite_code:string; status:'pending'|'attending'|'declined'; companion_allowed:boolean; companion_name:string|null; companion_attending:boolean };
+type Guest = { id:string; display_name:string; invite_code:string; status:'pending'|'attending'|'declined'; companion_allowed:boolean; companion_name:string|null; companion_attending:boolean; location_issued:boolean; location_used:boolean };
 const app = document.querySelector<HTMLElement>('#admin-app')!;
 const authUrl = app.dataset.authUrl || '';
 const auth = authUrl ? createAuthClient(authUrl, { adapter: BetterAuthVanillaAdapter({ fetchOptions: { credentials: 'include' } }) }) : null;
@@ -15,12 +15,12 @@ const cancel = el<HTMLButtonElement>('#cancel-edit');
 const list = el<HTMLElement>('#guest-list');
 let guests: Guest[] = [];
 function message(s:string) { msg.textContent = s; }
-async function api(method = 'GET', data?:object) {
+async function api(method = 'GET', data?:object, endpoint = '/api/admin/guests') {
   if (!auth) throw new Error('Configura Neon Auth en el servidor.');
   const { data: sessionData, error } = await auth.getSession();
   const token = sessionData?.session?.token;
   if (error || !token) throw new Error('No se pudo recuperar la sesión. Revisa la configuración del navegador e inicia sesión otra vez.');
-  const res = await fetch('/api/admin/guests', { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, body: data ? JSON.stringify(data) : undefined });
+  const res = await fetch(endpoint, { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, body: data ? JSON.stringify(data) : undefined });
   if (res.status === 401) throw new Error('Esta cuenta no está autorizada para administrar la lista.');
   const result = await res.json();
   if (!res.ok) throw new Error(result.error || 'Ocurrió un error.');
@@ -42,7 +42,26 @@ function render() {
     const url = `${location.origin}/invitacion/${guest.invite_code}`;
     const copy = document.createElement('button'); copy.type = 'button'; copy.textContent = 'Copiar enlace'; copy.addEventListener('click', async () => { try { await navigator.clipboard.writeText(url); message('Enlace copiado.'); } catch { message('No se pudo copiar el enlace.'); } });
     const share = document.createElement('a'); share.textContent = 'WhatsApp'; share.href = `https://wa.me/?text=${encodeURIComponent(`¡Hola ${guest.display_name}! Te comparto tu invitación: ${url}`)}`; share.target='_blank'; share.rel='noopener noreferrer';
-    actions.append(edit, copy, share); row.append(info, actions); list.append(row);
+    const locationStatus = document.createElement('p'); locationStatus.textContent = guest.location_used ? 'Código de ubicación usado' : guest.location_issued ? 'Código de ubicación generado' : 'Código de ubicación pendiente'; info.append(locationStatus);
+    const locationCode = document.createElement('button'); locationCode.type = 'button'; locationCode.textContent = guest.location_issued ? 'Regenerar código' : 'Generar código';
+    locationCode.addEventListener('click', async () => {
+      if (guest.location_issued && !window.confirm('Esto invalidará el código anterior. ¿Generar uno nuevo?')) return;
+      locationCode.disabled = true;
+      try {
+        const result = await api('POST', { id: guest.id, replace: guest.location_issued }, '/api/admin/location-code');
+        guest.location_issued = true; guest.location_used = false;
+        locationStatus.textContent = 'Código de ubicación generado'; locationCode.textContent = 'Regenerar código';
+        let output = info.querySelector<HTMLElement>('.location-code-output');
+        if (!output) { output = document.createElement('p'); output.className = 'location-code-output'; info.append(output); }
+        output.textContent = `Código: ${result.code} — cópialo y compártelo con el invitado; solo se muestra aquí ahora. `;
+        const copyCode = document.createElement('button'); copyCode.type = 'button'; copyCode.textContent = 'Copiar código';
+        copyCode.addEventListener('click', async () => { try { await navigator.clipboard.writeText(result.code); message('Código copiado.'); } catch { message('Selecciona el código para copiarlo manualmente.'); } });
+        output.append(copyCode);
+        message('Código generado. Cópialo antes de actualizar la lista.');
+      } catch (error) { message(error instanceof Error ? error.message : 'No se pudo generar el código.'); }
+      finally { locationCode.disabled = false; }
+    });
+    actions.append(edit, copy, share, locationCode); row.append(info, actions); list.append(row);
   }
 }
 async function refresh() { guests = await api(); render(); login.hidden=true; dashboard.hidden=false; logout.hidden=false; message('Panel de administración.'); }

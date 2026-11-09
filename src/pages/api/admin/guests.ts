@@ -5,7 +5,7 @@ export const prerender = false;
 const reply = (data: unknown, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } });
 export const GET: APIRoute = async ({ request }) => {
   if (!await isAdmin(request) || !pool) return reply({ error: 'No autorizado' }, 401);
-  try { const result = await pool.query('SELECT id, display_name, invite_code, status, companion_allowed, companion_name, companion_attending FROM guests ORDER BY created_at, id'); return reply(result.rows); }
+  try { const result = await pool.query('SELECT id, display_name, invite_code, status, companion_allowed, companion_name, companion_attending, (location_code_hash IS NOT NULL) AS location_issued, (location_used_at IS NOT NULL) AS location_used FROM guests ORDER BY created_at, id'); return reply(result.rows); }
   catch { return reply({ error: 'No se pudo consultar la lista' }, 500); }
 };
 export const POST: APIRoute = async ({ request }) => {

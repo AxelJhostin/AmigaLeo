@@ -171,3 +171,9 @@ La conexión local apunta a la rama `desarrollo`. Para activar el acceso falta c
 ## Confirmación de asistencia
 
 La invitación personalizada permite confirmar o declinar y, cuando está permitido, indicar un acompañante. La respuesta puede cambiarse hasta el 16 de noviembre de 2026 inclusive; provisionalmente cierra a las 23:59:59 de Ecuador continental (17 de noviembre a las 05:00 UTC). El servidor comprueba el plazo y el permiso de acompañante al guardar. El panel refleja el estado al cargar o al pulsar «Actualizar respuestas». Esta función se probó en la rama de desarrollo; requiere desplegar la versión actual para usarla en producción.
+
+## Ubicación de un solo uso (desarrollo)
+
+Desde el panel, la administradora genera un código para cada invitado y se lo comparte por separado. La invitación pide ese código y avisa que la ubicación se mostrará una sola vez; una solicitud simultánea o un segundo intento no reciben la ubicación. El panel permite regenerar un código e invalida el anterior. Se almacena una huella del código, no el código en claro; la dirección se configura como `EVENT_LOCATION` en el servidor y no se incluye en el HTML inicial. Si falta la dirección, el código no se consume.
+
+Para habilitarlo en producción hay que aplicar `db/migrations/002_location_codes.sql` en la rama `main`, configurar `EVENT_LOCATION` en Vercel y desplegar el código. La migración y la dirección todavía no están configuradas en producción. La revelación única no impide capturas ni que una persona comparta la dirección; una interrupción después de consumir el código puede requerir que la administradora genere otro.

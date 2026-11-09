@@ -13,8 +13,9 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
       <p class="subtitle">UNA NOCHE BRILLANTE NOS ESPERA</p>
       <div class="details">
         <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">20 NOVIEMBRE</p><p class="note">2026 · hora por confirmar<br />Fecha por confirmar</p></div>
-        <div class="detail"><span class="icon" aria-hidden="true">⌖</span><p class="label">UBICACIÓN</p><p class="value">ES UN SECRETO</p><p class="note">Se revelará con un código de un solo uso</p></div>
+        <div class="detail"><span class="icon" aria-hidden="true">⌖</span><p class="label">UBICACIÓN</p><p class="value">ES UN SECRETO</p><p class="note">Se revelará con un código de un solo uso</p>{code && <a class="location-link" href="#ubicacion">VER UBICACIÓN ↓</a>}</div>
       </div>
+      {code && <section class="location-section" id="ubicacion" data-invite-code={code} aria-labelledby="location-title"><p class="label">UBICACIÓN PRIVADA</p><h2 id="location-title">Un secreto para ti</h2><p>La ubicación se muestra una sola vez. Ten dónde anotarla antes de continuar.</p><form class="location-form" method="post" onsubmit="return false"><label for="location-code">Código de ubicación</label><input id="location-code" name="code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="22" required /><label class="location-ack"><input type="checkbox" name="acknowledge" required /> Entiendo que solo podré verla una vez y estoy list@ para anotarla.</label><button type="submit">MOSTRAR UBICACIÓN</button><p class="location-feedback" role="status" aria-live="polite">Cargando el formulario…</p></form><div class="location-result" hidden><strong>UBICACIÓN</strong><p></p></div><noscript>Activa JavaScript para consultar la ubicación.</noscript></section>}
       <div class="dress"><span class="dress-star" aria-hidden="true">✧</span><p class="label">DRESS CODE</p><p class="dress-title">FULL BLACK</p><p class="bikini">BIKINI OBLIGATORIO</p></div>
       <div class="bottle-rule">🍾 <strong>BOTELLA EN MANO OBLIGATORIA</strong><span>Sin eso no entras</span></div>
       <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Confirma tu asistencia</p><p>Confirma hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p>
@@ -33,3 +34,5 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
 </div>
 
 <script src="../../features/rsvp/form.ts"></script>
+
+<script src="../../features/location/reveal.ts"></script>
