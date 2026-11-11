@@ -55,3 +55,6 @@ Usar Node.js 22 para acercarse al entorno de Vercel. Las variables de entorno se
 - `src/styles/`: estilos.
 - `db/migrations/`: esquema de base de datos versionado.
 - `public/`: recursos públicos cuando se incorporen.
+
+
+sss
