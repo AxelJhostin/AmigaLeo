@@ -16,6 +16,12 @@ if (section && form) {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'No se pudo consultar la ubicación.');
       result.querySelector('p')!.textContent = data.location;
+      if (typeof data.mapUrl === 'string') {
+        const link = document.createElement('a');
+        link.href = data.mapUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
+        link.textContent = 'Abrir ubicación en Google Maps'; link.className = 'location-map-link';
+        result.append(link);
+      }
       result.hidden = false; form.hidden = true; input.value = '';
     } catch (error) { feedback.textContent = error instanceof Error ? error.message : 'No se pudo consultar la ubicación. Contacta a la anfitriona si el código ya fue usado.'; }
     finally { button.disabled = false; }

@@ -1,5 +1,6 @@
 import { createAuthClient } from '@neon/auth';
 import { BetterAuthVanillaAdapter } from '@neon/auth/vanilla/adapters';
+import { guestsToCsv } from './export-csv';
 
 type Guest = { id:string; display_name:string; invite_code:string; status:'pending'|'attending'|'declined'; companion_allowed:boolean; companion_name:string|null; companion_attending:boolean; location_issued:boolean; location_used:boolean };
 const app = document.querySelector<HTMLElement>('#admin-app')!;
@@ -70,5 +71,20 @@ logout.addEventListener('click', async () => { if(auth) await auth.signOut(); gu
 form.addEventListener('submit', async e=>{e.preventDefault(); const f=new FormData(form); const id=String(f.get('id')||''); try { await api(id ? 'PATCH' : 'POST',{...(id ? {id}:{}),name:String(f.get('name')||''),companion:f.has('companion'),companionName:String(f.get('companionName')||'')}); form.reset(); (form.elements.namedItem('id') as HTMLInputElement).value=''; cancel.hidden=true; await refresh(); message('Invitado guardado.'); } catch(err){message(err instanceof Error ? err.message : 'Error al guardar.');} });
 cancel.addEventListener('click',()=>{form.reset(); (form.elements.namedItem('id') as HTMLInputElement).value=''; cancel.hidden=true;});
 el<HTMLButtonElement>('#refresh-list').addEventListener('click', async () => { try { await refresh(); message('Lista actualizada.'); } catch (error) { message(error instanceof Error ? error.message : 'No se pudo actualizar la lista.'); } });
+el<HTMLButtonElement>('#export-csv').addEventListener('click', async () => {
+  const button = el<HTMLButtonElement>('#export-csv');
+  button.disabled = true;
+  try {
+    const latest: Guest[] = await api();
+    const file = new Blob([guestsToCsv(latest)], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url; link.download = 'invitados-respuestas.csv';
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    message('CSV descargado con la lista completa y las respuestas actuales.');
+  } catch (error) { message(error instanceof Error ? error.message : 'No se pudo descargar el CSV.'); }
+  finally { button.disabled = false; }
+});
 el<HTMLInputElement>('#search').addEventListener('input',render); el<HTMLSelectElement>('#status').addEventListener('change',render);
 if (auth) auth.getSession().then(({data})=>{if(data?.session) return refresh();}).catch((error)=>message(error instanceof Error ? error.message : 'No se pudo acceder al panel.')); else message('Falta configurar Neon Auth.');
