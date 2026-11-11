@@ -9,16 +9,15 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
     <span class="twinkle t1" aria-hidden="true">✦</span><span class="twinkle t2" aria-hidden="true">✧</span><span class="twinkle t3" aria-hidden="true">✦</span><span class="twinkle t4" aria-hidden="true">✧</span>
     <div class="card-content">
       <p class="greeting">{name ? `${name}, estás invitad@` : 'Esta invitación es para ti'}</p>
-      <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1 class="age">21</h1><p class="age-note">EDAD POR CONFIRMAR</p><div class="underline" aria-hidden="true"></div></div>
-      <p class="subtitle">UNA NOCHE BRILLANTE NOS ESPERA</p>
+      <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1 class="age">21</h1> </div>
       <div class="details">
-        <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">20 NOVIEMBRE</p><p class="note">2026 · hora por confirmar<br />Fecha por confirmar</p></div>
+        <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">20 NOVIEMBRE</p><p class="note">2026 · hora por confirmar</p></div>
         <div class="detail"><span class="icon" aria-hidden="true">⌖</span><p class="label">UBICACIÓN</p><p class="value">ES UN SECRETO</p><p class="note">Se revelará con un código de un solo uso</p>{code && <a class="location-link" href="#ubicacion">VER UBICACIÓN ↓</a>}</div>
       </div>
       {code && <section class="location-section" id="ubicacion" data-invite-code={code} aria-labelledby="location-title"><p class="label">UBICACIÓN PRIVADA</p><h2 id="location-title">Un secreto para ti</h2><p>La ubicación se muestra una sola vez. Ten dónde anotarla antes de continuar.</p><form class="location-form" method="post" onsubmit="return false"><label for="location-code">Código de ubicación</label><input id="location-code" name="code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="22" required /><label class="location-ack"><input type="checkbox" name="acknowledge" required /> Entiendo que solo podré verla una vez y estoy list@ para anotarla.</label><button type="submit">MOSTRAR UBICACIÓN</button><p class="location-feedback" role="status" aria-live="polite">Cargando el formulario…</p></form><div class="location-result" hidden><strong>UBICACIÓN</strong><p></p></div><noscript>Activa JavaScript para consultar la ubicación.</noscript></section>}
       <div class="dress"><span class="dress-star" aria-hidden="true">✧</span><p class="label">DRESS CODE</p><p class="dress-title">FULL BLACK</p><p class="bikini">BIKINI OBLIGATORIO</p></div>
-      <div class="bottle-rule">🍾 <strong>BOTELLA EN MANO OBLIGATORIA</strong><span>Sin eso no entras</span></div>
-      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Confirma tu asistencia</p><p>Confirma hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p>
+      <div class="bottle-rule"> <strong>BOTELLA EN MANO OBLIGATORIA</strong><span>Sin eso no entras</span></div>
+      <section class="confirmation" aria-labelledby="rsvp-title"><p class="script" id="rsvp-title">Conf o No conf</p><p>Confirma hasta el<br /><strong>16 DE NOVIEMBRE DE 2026</strong></p>
         {code ? <div class="rsvp" data-code={code}>
           <p class="rsvp-current" aria-live="polite">{status === 'attending' ? `Confirmaste tu asistencia${companionAttending ? ' con un acompañante' : ''}.` : status === 'declined' ? 'Indicaste que no podrás asistir.' : 'Aún no has respondido.'}</p>
           {closed ? <p class="rsvp-feedback">El plazo para confirmar ya terminó.</p> : <form class="rsvp-form" method="post" onsubmit="return false">
@@ -28,7 +27,7 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
           </form>}
         </div> : <p class="rsvp-pending">Abre tu enlace personalizado para responder.</p>}
       </section>
-      <footer>GOOD MUSIC <span>✦</span> GOOD FRIENDS <span>✦</span> GOOD VIBES</footer>
+      <footer>XOXO</footer>
     </div>
   </article>
 </div>
