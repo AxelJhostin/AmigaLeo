@@ -1,6 +1,7 @@
 import { createAuthClient } from '@neon/auth';
 import { BetterAuthVanillaAdapter } from '@neon/auth/vanilla/adapters';
 import { guestsToCsv } from './export-csv';
+import { groupResponses } from './response-summary';
 
 type Guest = { id:string; display_name:string; invite_code:string; status:'pending'|'attending'|'declined'; companion_allowed:boolean; companion_name:string|null; companion_attending:boolean; location_issued:boolean; location_used:boolean };
 const app = document.querySelector<HTMLElement>('#admin-app')!;
@@ -29,6 +30,22 @@ async function api(method = 'GET', data?:object, endpoint = '/api/admin/guests')
 }
 function render() {
   for (const [id, value] of [['#total',guests.length],['#attending',guests.filter(g=>g.status==='attending').length],['#declined',guests.filter(g=>g.status==='declined').length],['#pending-count',guests.filter(g=>g.status==='pending').length]] as const) el<HTMLElement>(id).textContent = String(value);
+  const groups = groupResponses(guests);
+  for (const status of ['attending', 'declined', 'pending'] as const) {
+    const container = el<HTMLUListElement>(`#${status}-list`);
+    el<HTMLElement>(`#${status}-summary-count`).textContent = String(groups[status].length);
+    container.replaceChildren();
+    if (!groups[status].length) {
+      const empty = document.createElement('li'); empty.className = 'response-empty';
+      empty.textContent = status === 'attending' ? 'Todavía no hay confirmaciones.' : status === 'declined' ? 'Nadie ha indicado que no asistirá.' : 'No hay respuestas pendientes.';
+      container.append(empty);
+    }
+    for (const guest of groups[status]) {
+      const item = document.createElement('li');
+      item.textContent = `${guest.display_name}${status === 'attending' && guest.companion_attending ? ` + 1 acompañante${guest.companion_name ? ` (${guest.companion_name})` : ''}` : ''}`;
+      container.append(item);
+    }
+  }
   const term = el<HTMLInputElement>('#search').value.toLocaleLowerCase('es');
   const status = el<HTMLSelectElement>('#status').value;
   list.replaceChildren();

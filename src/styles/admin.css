@@ -3,3 +3,4 @@
 #result:not(:empty){padding:16px;border:1px solid #ee8fc0;border-radius:8px;background:#30202b;color:#fff;font-size:15px}
 .guest-row .location-code-output{color:#ffd6eb;overflow-wrap:anywhere;user-select:all;line-height:1.5}
 .panel-actions{display:flex;flex-wrap:wrap;gap:8px}
+.responses-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}.responses-grid section{border:1px solid #393039;background:#1b171a;border-radius:10px;padding:16px;min-width:0}.responses-grid h3{font-size:15px;margin:0 0 12px}.responses-grid h3 span{color:#f7a4cf}.response-list{list-style:none;padding:0;margin:0;max-height:240px;overflow:auto}.response-list li{font-size:13px;color:#e6dce2;padding:7px 0;border-top:1px solid #393039;overflow-wrap:anywhere}.response-list li.response-empty{color:#aaa}@media(max-width:700px){.responses-grid{grid-template-columns:1fr}.response-list{max-height:160px}}

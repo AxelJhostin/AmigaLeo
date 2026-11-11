@@ -38,3 +38,5 @@
 .bottles {
   display: none;
 }
+.greeting{font-size:15px;font-weight:600;color:#fff;text-shadow:0 0 8px #ff72bc,0 0 18px #ff2f9b;line-height:1.45;overflow-wrap:anywhere}.guest-name{color:#ffc4e2;font-weight:700;letter-spacing:.09em;text-shadow:0 0 5px #ffb1db,0 0 15px #ff3ba5,0 0 28px #ff3ba580}
+.card-content > .greeting{display:inline-block;max-width:100%;padding:8px 12px;border-radius:8px;background:#050505c9;font-size:17px}
