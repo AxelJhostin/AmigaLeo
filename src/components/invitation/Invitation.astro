@@ -9,6 +9,7 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
     <span class="twinkle t1" aria-hidden="true">✦</span><span class="twinkle t2" aria-hidden="true">✧</span><span class="twinkle t3" aria-hidden="true">✦</span><span class="twinkle t4" aria-hidden="true">✧</span>
     <div class="card-content">
       <p class="greeting">{name ? `${name}, estás invitad@` : 'Esta invitación es para ti'}</p>
+      <div class="music-player"><audio id="invitation-music" src="/audio/cancionLucia.mp3" preload="metadata" autoplay loop></audio><button id="music-toggle" type="button" aria-pressed="false" aria-label="Activar música">♪ &nbsp; Activar música</button><p id="music-status" role="status" aria-live="polite"></p></div>
       <div class="headline"><p class="script">Te invito a festejar</p><p class="small-title">✦ &nbsp; MI CUMPLE &nbsp; ✦</p><h1 class="age">21</h1> </div>
       <div class="details">
         <div class="detail"><span class="icon" aria-hidden="true">◷</span><p class="label">FECHA Y HORA</p><p class="value">20 NOVIEMBRE</p><p class="note">2026 · hora por confirmar</p></div>
@@ -35,3 +36,5 @@ const { name, code, status = 'pending', companionAllowed = false, companionAtten
 <script src="../../features/rsvp/form.ts"></script>
 
 <script src="../../features/location/reveal.ts"></script>
+
+<script src="../../features/music/player.ts"></script>

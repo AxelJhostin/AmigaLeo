@@ -17,3 +17,4 @@
 .headline {
   margin-bottom: 40px;
 }.location-map-link{display:inline-block;margin-top:8px;color:#ffb1d8;text-decoration:underline;font-size:14px}
+.music-player{text-align:center;margin:0 auto 18px}.music-player button{background:#101010;border:1px solid #ff77bb88;border-radius:30px;padding:8px 15px;color:#fff;font:600 12px 'Barlow Condensed',sans-serif;letter-spacing:.08em;cursor:pointer}.music-player button[aria-pressed=true]{box-shadow:0 0 12px #ff58a855}.music-player p{min-height:1em;margin:5px 0 0;font-size:11px;color:#c6b5bf}
